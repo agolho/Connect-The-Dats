@@ -14,6 +14,12 @@ public class Dat : MonoBehaviour
     
     private bool isZoomed;
 
+    private void Start()
+    {
+        datImage = GetComponent<Image>();
+        datValueText = GetComponentInChildren<TextMeshProUGUI>();
+    }
+
     public void SetupDat(int value, Color datColor)
     {
         datValueText.text = value.ToString();
@@ -26,6 +32,7 @@ public class Dat : MonoBehaviour
     {
         if (isZoomed) return;
         isZoomed = true;
+        if(datImage == null) datImage = GetComponent<Image>();
         datImage.rectTransform.localScale *= 1.2f;
     }
 

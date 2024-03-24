@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,24 +24,32 @@ public class GridCell : MonoBehaviour
     public int index;
 
     public Dat cellDat;
-    
-    private void Start()
-    {
-        SetUpDat();
-    }
 
-    private void SetUpDat()
+    private TextMeshProUGUI debugText;
+    public void SetUpDat()
     {
         if(cellValue == 0) return;
         isValid = true;
         var cellTransform = transform;
+        if(cellDat != null) Destroy(cellDat.gameObject);
         cellDat = Instantiate(GridManager.Instance.datPrefab, cellTransform.position, cellTransform.rotation, cellTransform);
         
         //TODO: get the dat value from the grid manager
         //TODO: get the dat color from the grid manager dictionary
-        cellDat.SetupDat(cellValue, Color.red);
+        cellDat.SetupDat(cellValue, LineManager.Instance.GetColorFromDictionary(cellValue));
+        debugText = GetComponentInChildren<TextMeshProUGUI>();
+        debugText.text = cellValue.ToString();
+    }
+    
+    public void SetValue(int value)
+    {
+        cellValue = value;
     }
 
+    private void Update()
+    {
+        debugText.text = cellValue+ " ["+gameObject.name +"]";
+    }
 
     private void OnMouseDown()
     {
