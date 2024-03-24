@@ -84,8 +84,8 @@ public class LineManager : MonoBehaviour
 
     private IEnumerator CellShiftRoutine()
     {
-        yield return new WaitForSeconds(0.15f);
-        //GridManager.Instance.ShiftCellsDown();
+        yield return new WaitForSeconds(0.25f);
+        GridManager.Instance.ShiftCellsDown();
         yield return new WaitForSeconds(0.15f);
         //GridManager.Instance.CheckEmptyCells();
     }
@@ -95,7 +95,7 @@ public class LineManager : MonoBehaviour
         foreach (var cell in path)
         {
             cell.isStart = false;
-            cell.cellDat.ResetScale();
+            if(cell.cellDat != null) cell.cellDat.ResetScale();
         }
 
         ClearPath();

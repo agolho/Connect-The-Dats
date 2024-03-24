@@ -56,9 +56,9 @@ public class GridCell : MonoBehaviour
         if (!isValid) return;
         if(LineManager.Instance.path.Count == 0) isStart = true;
         
-        
         LineManager.Instance.AddToPath(this);
         LineManager.Instance.currentLineValue = cellValue;
+        if (cellDat == null) return;
         cellDat.ScaleUp();
     }
 
@@ -81,7 +81,7 @@ public class GridCell : MonoBehaviour
             return;
         }
         LineManager.Instance.AddToPath(this);
-        cellDat.ScaleUp();
+        cellDat?.ScaleUp();
     }
 
     bool CheckCellSecondFromLast(GridCell cell)

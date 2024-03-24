@@ -92,59 +92,81 @@
 
         private int _emptyCellsCount;
         [SerializeField] private List<GridCell> emptyCells = new List<GridCell>();
+        List<GridCell> cellsToRemove = new List<GridCell>();
+        List<GridCell> cellsToMove = new List<GridCell>();
+                
+        int[] _emptyCellMinRows = {5,5,5,5,5};
+        int[] _emptyCellMaxRows = {0,0,0,0,0};
+        int[] _moveDepth = {0,0,0,0,0};
+        
+        void ResetMoveValues()
+        {
+            for (var i = 0; i < numCols; i++)
+            {
+                _emptyCellMinRows[i] = 5;
+                _emptyCellMaxRows[i] = 0;
+                _moveDepth[i] = 0;
+            }
+        }
+        
         public void AddToEmptyCells(GridCell cell)
         {
             _emptyCellsCount++;
             emptyCells.Add(cell);
+            
+            if(cell.row < _emptyCellMinRows[cell.col]) _emptyCellMinRows[cell.col] = cell.row;
+            if(cell.row + 1 > _emptyCellMaxRows[cell.col]) _emptyCellMaxRows[cell.col] = cell.row +1;
+            _moveDepth[cell.col] = _emptyCellMaxRows[cell.col] - _emptyCellMinRows[cell.col];
+            
             Debug.Log("added empty cell" + cell.gameObject.name);
-            Invoke(nameof(ShiftCellsDown), 0.26f);
         }
         
-        List<GridCell> cellsToRemove = new List<GridCell>();
-        List<GridCell> cellsToMove = new List<GridCell>();
         public void ShiftCellsDown()
         {
             cellsToMove = new List<GridCell>();
-            foreach (var emptyCell in emptyCells.ToList()) 
+            foreach (var emptyCell in emptyCells) 
             {
-                for (int row = emptyCell.row + 1; row < numCols; row++)
+                for (var row = emptyCell.row + 1; row < numRows; row++)
                 {
-                     cellsToMove.Add(GetCell(row, emptyCell.col));
+                    if (GetCell(row, emptyCell.col).cellValue == 0) continue;
+                    cellsToMove.Add(GetCell(row, emptyCell.col));
                 }
-                cellsToRemove.Add(emptyCell);
             }
-
-            for (var index = 0; index < cellsToMove.Count; index++)
+            
+            // for (var column = 0; column < numCols; column++)
+            // {
+            //     foreach (var ctm in cellsToMove)
+            //     {
+            //         if (ctm.col != column) continue;
+            //         var targetCell = GetCell(ctm.row - _moveDepth[column] , column) ;
+            //         ctm.cellDat.transform.DOMove(targetCell.transform.position, 0.25f);
+            //     }
+            // }
+            
+            foreach (var ctm in cellsToMove)
             {
-                for( var col = 0; col < numCols; col++)
+                for (int column = 0; column < numCols; column++)
                 {
-                    var cell = cellsToMove[index];
-                    if(cell.col != col) continue;
-                    var depth = 1;
-                 
-                    //depth = emptyCells.Where(c => c.col == col).Min(c => c.row) +1;
-                    Debug.Log("Depth is "+ depth);
+                    if(ctm.col != column) continue;
+                    var targetCell = GetCell(ctm.row - _moveDepth[column], column);
+                    if (ctm.cellValue == 0) continue;
+                    if (ctm.cellDat == null) continue;
                     
-                    var targetCellRow = cell.row-depth;
-                    var targetCell = GetCell(targetCellRow, col);
-                    if(cell.cellDat == null) continue;
-                    if(cell.cellValue == 0) continue;
-                    Debug.Log(cell.gameObject.name +" is moving to "+ targetCell.gameObject.name);
-                    cell.cellDat.transform.DOMove(targetCell.transform.position, 0.15f)
-                        .OnComplete(() =>
-                        {
-                            targetCell.SetValue(cell.cellValue);
-                            Debug.Log("Target "+ targetCell.gameObject.name+"  value is " + targetCell.cellValue+ " and cell "+ cell.gameObject.name+" value is " + cell.cellValue) ;
-                        
-                            targetCell.cellDat = cell.cellDat;
-                            targetCell.cellDat.transform.SetParent(targetCell.transform);
-                        
-                            cell.cellDat = null;
-                            cell.SetValue(0);
-                        
-                        });
+                    Debug.Log(ctm.gameObject.name + " is moving to " + targetCell.gameObject.name);
+
+                    ctm.cellDat.transform.DOMove(targetCell.transform.position, 0.25f).OnComplete(() =>
+                    {
+                        Debug.Log("Target "+ targetCell.gameObject.name+"  value is " + targetCell.cellValue+ " and cell "+ ctm.gameObject.name+" value is " + ctm.cellValue) ;
+                    });
+                    targetCell.cellDat = ctm.cellDat;
+                    ctm.cellDat.transform.SetParent(targetCell.transform);
+                    ctm.cellDat = null;
+                    targetCell.cellValue = ctm.cellValue;
+                    ctm.cellValue = 0;
+                    cellsToRemove.Add(targetCell);
                 }
             }
+            
             foreach (var cellToRemove in cellsToRemove)
             {
                 emptyCells.Remove(cellToRemove);
@@ -152,6 +174,7 @@
             }
             cellsToMove.Clear();
             cellsToRemove.Clear();
+            ResetMoveValues();
         }
         
         IEnumerator SetEmptyCellToZero(GridCell cell)
