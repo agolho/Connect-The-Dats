@@ -41,7 +41,7 @@ public class Dat : MonoBehaviour
         if (isZoomed) return;
         isZoomed = true;
         if(datImage == null) datImage = GetComponent<Image>();
-        datImage.rectTransform.localScale *= 1.2f;
+        datImage.rectTransform.localScale *= 1.1f;
     }
 
     public void ResetScale()
@@ -58,5 +58,31 @@ public class Dat : MonoBehaviour
         {
             datImage.rectTransform.DOScale(Vector3.one, .1f);
         });
+    }
+
+    public void PopIn()
+    {
+        transform.localScale = Vector3.zero;
+        transform.DOScale(Vector3.one, .2f).SetEase(Ease.OutBack);
+    }
+    
+    public void SquashAndStretch()
+    {
+        StartCoroutine(SquashAndStretchRoutine());
+    }
+    private IEnumerator SquashAndStretchRoutine()
+    {
+        yield return new WaitForSeconds(0.1f);
+        transform.DOComplete();
+        transform.DOLocalMove(Vector3.up * -.2f, .07f)
+            .OnComplete(() =>
+            {
+                transform.DOLocalMove(Vector3.zero, .1f);
+            });
+        transform.DOScale(Vector3.up * .8f + Vector3.right, .07f)
+            .OnComplete(() =>
+            {
+                transform.DOScale(Vector3.one, .1f);
+            });
     }
 }

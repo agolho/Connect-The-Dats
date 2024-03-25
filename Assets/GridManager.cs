@@ -91,6 +91,7 @@
                 
                 cell.cellValue = (int)Mathf.Pow(2, UnityEngine.Random.Range(1, 5));
                 cell.SetUpDat();
+                cell.cellDat.PopIn();
                 emptyCells.Remove(cell);
             }
             SetInteractablilty(true);
@@ -110,6 +111,7 @@
             if(cell.row < _emptyCellMinRows[cell.col]) _emptyCellMinRows[cell.col] = cell.row;
             if(cell.row + 1 > _emptyCellMaxRows[cell.col]) _emptyCellMaxRows[cell.col] = cell.row +1;
             _moveDepth[cell.col] = _emptyCellMaxRows[cell.col] - _emptyCellMinRows[cell.col];
+            
         }
 
         public void ShiftCellsDown()
@@ -146,19 +148,39 @@
                 for (int column = 0; column < numCols; column++)
                 {
                     if(ctm.col != column) continue;
-                    var targetCell = GetCell(ctm.row - _moveDepth[column], column);
                     if (ctm.cellValue == 0) continue;
                     if (ctm.cellDat == null) continue;
-                    
-                    //Debug.Log(ctm.gameObject.name + " is moving to " + targetCell.gameObject.name);
 
-                    ctm.cellDat.transform.DOMove(targetCell.transform.position, 0.25f);
+                    var targetRow = ctm.row - _moveDepth[column];
+                    if (targetRow < 0) _moveDepth[column] = 1;
+                    var targetCell = GetCell(targetRow, column);
+                    if (targetCell == null)
+                    {
+                        Debug.Log("Target cell is null at row: " + (ctm.row - _moveDepth[column]) + " column: "+ column );
+                        Debug.Log("ctm row: " + ctm.row + " depth: " + _moveDepth[column] + " column: " + column);
+                        continue;
+                    }
                     
+                    if (targetCell.cellValue != 0)
+                    {
+                        Debug.Log(ctm.gameObject.name);
+                        Debug.Log(" Target cell is not empty at row: " + targetRow + " column: " + column + " value: " + targetCell.cellValue);
+                        Debug.Log(ctm.row + " " + _moveDepth[column] + " " + column + " " + ctm.cellValue);
+                        _moveDepth[column] = 1;
+                        targetRow = ctm.row - _moveDepth[column];
+                        targetCell = GetCell(targetRow, column);
+                    }
+
+
+                    ctm.cellDat.transform.DOComplete();
+                    ctm.cellDat.transform.DOMove(targetCell.transform.position, 0.1f);
+                    ctm.cellDat.SquashAndStretch();
+                    
+                    targetCell.cellValue = ctm.cellValue;
+                    ctm.cellValue = 0;
                     targetCell.cellDat = ctm.cellDat;
                     ctm.cellDat.transform.SetParent(targetCell.transform);
                     ctm.cellDat = null;
-                    targetCell.cellValue = ctm.cellValue;
-                    ctm.cellValue = 0;
                     _cellsToRemove.Add(targetCell);
                 }
             }

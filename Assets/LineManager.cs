@@ -79,7 +79,7 @@ public class LineManager : MonoBehaviour
             GridManager.Instance.AddToEmptyCells(cell);
             cell.cellDat.transform.DOMove(path[^1].transform.position, 0.25f).OnComplete(() =>
             {
-                Destroy(cell.cellDat.gameObject);
+                Trash.Instance.TrashObject(cell.cellDat.gameObject);
             });
         }
         path[^1].cellValue = lineValue;
