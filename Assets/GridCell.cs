@@ -25,7 +25,6 @@ public class GridCell : MonoBehaviour
 
     public Dat cellDat;
 
-    private TextMeshProUGUI debugText;
     public void SetUpDat()
     {
         if(cellValue == 0) return;
@@ -37,8 +36,6 @@ public class GridCell : MonoBehaviour
         //TODO: get the dat value from the grid manager
         //TODO: get the dat color from the grid manager dictionary
         cellDat.SetupDat(cellValue, LineManager.Instance.GetColorFromDictionary(cellValue));
-        debugText = GetComponentInChildren<TextMeshProUGUI>();
-        debugText.text = cellValue.ToString();
     }
     
     public void SetValue(int value)
@@ -46,18 +43,14 @@ public class GridCell : MonoBehaviour
         cellValue = value;
     }
 
-    private void Update()
-    {
-        debugText.text = cellValue+ " ["+gameObject.name +"]";
-    }
-
     private void OnMouseDown()
     {
         if (!isValid) return;
+        if(!GridManager.Instance.IsInteractable) return;
         if(LineManager.Instance.path.Count == 0) isStart = true;
         
+        LineManager.Instance.currentLineMasterValue = cellValue;
         LineManager.Instance.AddToPath(this);
-        LineManager.Instance.currentLineValue = cellValue;
         if (cellDat == null) return;
         cellDat.ScaleUp();
     }
@@ -66,7 +59,7 @@ public class GridCell : MonoBehaviour
     {
         if (!isValid) return;
         if (LineManager.Instance.path.Count <= 0) return;
-        if(LineManager.Instance.currentLineValue != cellValue) return;
+        if(LineManager.Instance.currentLineMasterValue != cellValue) return;
 
         var lastCell = LineManager.Instance.path[^1];
         if(!CheckCellIsNeighbour(lastCell)) return;

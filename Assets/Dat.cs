@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,11 +23,18 @@ public class Dat : MonoBehaviour
 
     public void SetupDat(int value, Color datColor)
     {
-        datValueText.text = value.ToString();
-        datImage.color = datColor;
+        if (value >= 1024)
+        {
+            var thousands = value / 1024; 
+            datValueText.text = thousands+ "K";
+            datImage.color = datColor;
+        }
+        else
+        {
+            datValueText.text = value.ToString();
+            datImage.color = datColor;
+        }
     }
-    
-    
     
     public void ScaleUp()
     {
@@ -40,5 +48,15 @@ public class Dat : MonoBehaviour
     {
         isZoomed = false;
         datImage.rectTransform.localScale = Vector3.one;
+    }
+
+    public void Emphasise()
+    {
+        ResetScale();
+        datImage.rectTransform.DOComplete();
+        datImage.rectTransform.DOScale(Vector3.one * 1.2f, .15f).OnComplete(() =>
+        {
+            datImage.rectTransform.DOScale(Vector3.one, .1f);
+        });
     }
 }

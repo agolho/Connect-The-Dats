@@ -2,18 +2,26 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class LineManager : MonoBehaviour
 {
     public static LineManager Instance;
     public List<GridCell> path = new List<GridCell>();
-    public int currentLineValue;
+    [SerializeField] private Line linePrefab;
+    [SerializeField] private Transform lineParent;
+    public int currentLineMasterValue;
 
+    [SerializeField] private Image lineIndicatorImage;
+    [SerializeField] private TextMeshProUGUI lineIndicatorText;
 
     [SerializeField] private Color[] valueColors;
-    public Dictionary<int, Color> LineColors = new Dictionary<int, Color>();
-    
+    private readonly Dictionary<int, Color> _lineColors = new Dictionary<int, Color>();
+    [SerializeField] private int[] lineValues = {2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
+
     private void Awake()
     {
         Instance = this;
@@ -26,9 +34,9 @@ public class LineManager : MonoBehaviour
 
     void BuildDictionary()
     {
-        for (var i = 1; i < 7; i++)
+        for (var i = 1; i < 15; i++)
         {
-            LineColors.Add(
+            _lineColors.Add(
                 (int) Mathf.Pow(2,i),
                 valueColors[i-1]
                 );
@@ -37,7 +45,7 @@ public class LineManager : MonoBehaviour
     
     public Color GetColorFromDictionary(int value)
     {
-        return LineColors[value];
+        return _lineColors[value];
     }
 
     private void Update()
@@ -50,6 +58,7 @@ public class LineManager : MonoBehaviour
 
     private void MouseUp()
     {
+        UpdateLineIndicator();
         if(path.Count > 1) MergeLine();
         else CancelLine();
     }
@@ -58,8 +67,7 @@ public class LineManager : MonoBehaviour
     {
         // allow only mathematical powers of 2
         
-        var validOddLineCount = path.Count % 2 == 0 ? path.Count : path.Count - 1;
-        var lineValue = currentLineValue * validOddLineCount;
+        var lineValue = CalculateLineValue();
 
         path[^1].transform.SetAsLastSibling();
         for (var index = 0; index < path.Count; index++)
@@ -76,10 +84,31 @@ public class LineManager : MonoBehaviour
         }
         path[^1].cellValue = lineValue;
         path[^1].cellDat.SetupDat(lineValue, GetColorFromDictionary(lineValue));
-        path[^1].cellDat.ResetScale();
+        path[^1].cellDat.Emphasise();
         ClearPath();
-        
+        GridManager.Instance.SetInteractablilty(false);
+        SoundManager.Instance.PlaySound(Random.Range(0, 2) == 0 ? "pop1" : "pop2");
         StartCoroutine(CellShiftRoutine());
+    }
+
+    private int CalculateLineValue()
+    {
+        var lineValue = currentLineMasterValue * path.Count;
+
+        var nearestLowerValue = lineValues[0];
+        foreach (var value in lineValues)
+        {
+            if (value <= lineValue)
+            {
+                nearestLowerValue = value;
+            }
+            else
+            {
+                break;
+            }
+        }
+    
+        return nearestLowerValue;
     }
 
     private IEnumerator CellShiftRoutine()
@@ -101,18 +130,62 @@ public class LineManager : MonoBehaviour
         ClearPath();
     }
 
+    private void DrawLine(GridCell cell)
+    {
+        if(path.Count == 1) return;
+        var direction = path[^2].transform.position - cell.transform.position;
+        var linePosition = path[^2].transform.position - direction / 2;
+        var lineRotation = Quaternion.FromToRotation(Vector3.right, direction);
+        var line = Instantiate(linePrefab, linePosition, lineRotation, lineParent);
+        line.SetColor(GetColorFromDictionary(currentLineMasterValue));
+    }
+
+    private void RemoveLastLine()
+    {
+        Destroy(lineParent.GetChild(lineParent.childCount - 1).gameObject);
+    }
+    
+    void ClearLine()
+    {
+        foreach (Transform child in lineParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
     public void AddToPath(GridCell cell)
     {
         path.Add(cell);
+        DrawLine(cell);
+        SoundManager.Instance.PlaySound("bop", path.Count);
+        UpdateLineIndicator();
     }
-    
+
     public void RemoveFromPath(GridCell cell)
     {
         path.Remove(cell);
+        RemoveLastLine();
+        SoundManager.Instance.PlaySound("bop", path.Count);
+        UpdateLineIndicator();
     }
     
     public void ClearPath()
     {
         path.Clear();
+        UpdateLineIndicator();
+        ClearLine();
+    }
+    
+    private void UpdateLineIndicator()
+    {
+        if (path.Count == 0)
+        {
+            lineIndicatorImage.gameObject.SetActive(false);
+            return;
+        }
+        var value = CalculateLineValue();
+        lineIndicatorText.text = value.ToString();
+        lineIndicatorImage.color = GetColorFromDictionary(value);
+        lineIndicatorImage.gameObject.SetActive(true);
     }
 }
