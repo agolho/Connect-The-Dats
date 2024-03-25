@@ -20,7 +20,7 @@ public class LineManager : MonoBehaviour
 
     [SerializeField] private Color[] valueColors;
     private readonly Dictionary<int, Color> _lineColors = new Dictionary<int, Color>();
-    [SerializeField] private int[] lineValues = {2,4,8,16,32,64,128,256,512,1024,2048,4096,8192};
+    [SerializeField] private List<int> lineValues = new List<int>();
 
     private void Awake()
     {
@@ -34,12 +34,14 @@ public class LineManager : MonoBehaviour
 
     void BuildDictionary()
     {
-        for (var i = 1; i < 15; i++)
+        for (var i = 1; i < GameManager.Instance.powersOfTwoCount; i++)
         {
+            var colorIndex = (i - 1) % valueColors.Length;
             _lineColors.Add(
-                (int) Mathf.Pow(2,i),
-                valueColors[i-1]
-                );
+                (int)Mathf.Pow(2, i),
+                valueColors[colorIndex]
+            );
+            lineValues.Add((int)Mathf.Pow(2, i));
         }
     }
     
@@ -65,30 +67,30 @@ public class LineManager : MonoBehaviour
     
     private void MergeLine()
     {
-        // allow only mathematical powers of 2
-        
         var lineValue = CalculateLineValue();
 
-        path[^1].transform.SetAsLastSibling();
+        path[^1].transform.SetAsFirstSibling();
         for (var index = 0; index < path.Count; index++)
         {
             if (index == path.Count - 1) continue;
             var cell = path[index];
-            cell.cellDat.ResetScale();
-            cell.cellValue = 0;
+            cell.ResetScale();
+            cell.SetValue(0);
             GridManager.Instance.AddToEmptyCells(cell);
-            cell.cellDat.transform.DOMove(path[^1].transform.position, 0.25f).OnComplete(() =>
-            {
-                Trash.Instance.TrashObject(cell.cellDat.gameObject);
-            });
+            cell.MoveCellDatAndTrash(path[^1].transform.position, 0.15f);
         }
-        path[^1].cellValue = lineValue;
-        path[^1].cellDat.SetupDat(lineValue, GetColorFromDictionary(lineValue));
-        path[^1].cellDat.Emphasise();
+        StartCoroutine(MergeCellRoutine(lineValue, path[^1]));
         ClearPath();
-        GridManager.Instance.SetInteractablilty(false);
         SoundManager.Instance.PlaySound(Random.Range(0, 2) == 0 ? "pop1" : "pop2");
         StartCoroutine(CellShiftRoutine());
+    }
+
+    IEnumerator MergeCellRoutine(int lineValue, GridCell mergeTargetCell)
+    {
+        yield return new WaitForSeconds(0.15f);
+        mergeTargetCell.cellValue = lineValue;
+        mergeTargetCell.cellDat.SetupDat(lineValue, GetColorFromDictionary(lineValue));
+        mergeTargetCell.cellDat.Emphasise();
     }
 
     private int CalculateLineValue()
@@ -115,8 +117,6 @@ public class LineManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.25f);
         GridManager.Instance.ShiftCellsDown();
-        yield return new WaitForSeconds(0.15f);
-        //GridManager.Instance.CheckEmptyCells();
     }
 
     private void CancelLine()

@@ -31,30 +31,24 @@
         int[] _emptyCellMinRows = {5,5,5,5,5};
         int[] _emptyCellMaxRows = {0,0,0,0,0};
         int[] _moveDepth = {0,0,0,0,0};
+
+        readonly float[] _probabilities = {0.1f, 0.224f, 0.3f, 0.175f, 0.125f, 0.05f, 0.025f, 0.001f};
+
+        
+        public static event Action MoveComplete;
         
         private void Awake()
         {
             Instance = this;
         }
 
-        private void Start()
+        public void SetupBoard()
         {
             CalculateNeighbours();
-            SetupBoard();
-        }
-
-        void SetupBoard()
-        {
             foreach (var cell in grid)
             {
                 cell.SetUpDat();
             }
-        }
-        
-        public void SetInteractablilty(bool value)
-        {
-            IsInteractable = value;
-            if(value) GameManager.Instance.SaveGame();
         }
         
         void CalculateNeighbours()
@@ -81,22 +75,37 @@
         {
             return grid.FirstOrDefault(c => c.row == row && c.col == col);
         }
-        
+
 
         public void GenerateRandomNewCell()
         {
+
             foreach (var cell in grid)
             {
                 if (cell.cellValue != 0) continue;
-                
-                cell.cellValue = (int)Mathf.Pow(2, UnityEngine.Random.Range(1, 5));
+
+                float randomNum = UnityEngine.Random.value;
+                float cumulativeProbability = 0f;
+                int selectedNumber = 0;
+
+                for (int i = 0; i < _probabilities.Length; i++)
+                {
+                    cumulativeProbability += _probabilities[i];
+                    if (randomNum <= cumulativeProbability)
+                    {
+                        selectedNumber = (int)Mathf.Pow(2, i + 1);
+                        break;
+                    }
+                }
+
+                cell.cellValue = selectedNumber;
                 cell.SetUpDat();
                 cell.cellDat.PopIn();
                 emptyCells.Remove(cell);
             }
-            SetInteractablilty(true);
+            OnMoveComplete();
+            GameManager.Instance.SaveGame();
         }
-
 
         
         public void AddToEmptyCells(GridCell cell)
@@ -143,47 +152,43 @@
         
         private void ProcessCellsToMove()
         {
-            foreach (var ctm in _cellsToMove)
+            foreach (var cellToMove in _cellsToMove)
             {
-                for (int column = 0; column < numCols; column++)
+                for (var column = 0; column < numCols; column++)
                 {
-                    if(ctm.col != column) continue;
-                    if (ctm.cellValue == 0) continue;
-                    if (ctm.cellDat == null) continue;
+                    if(cellToMove.col != column) continue;
+                    if (cellToMove.cellValue == 0) continue;
+                    if (cellToMove.cellDat == null) continue;
 
-                    var targetRow = ctm.row - _moveDepth[column];
+                    var targetRow = cellToMove.row - _moveDepth[column];
                     if (targetRow < 0) _moveDepth[column] = 1;
                     var targetCell = GetCell(targetRow, column);
-                    if (targetCell == null)
-                    {
-                        Debug.Log("Target cell is null at row: " + (ctm.row - _moveDepth[column]) + " column: "+ column );
-                        Debug.Log("ctm row: " + ctm.row + " depth: " + _moveDepth[column] + " column: " + column);
-                        continue;
-                    }
+                    if (targetCell == null)  continue;
                     
                     if (targetCell.cellValue != 0)
                     {
-                        Debug.Log(ctm.gameObject.name);
-                        Debug.Log(" Target cell is not empty at row: " + targetRow + " column: " + column + " value: " + targetCell.cellValue);
-                        Debug.Log(ctm.row + " " + _moveDepth[column] + " " + column + " " + ctm.cellValue);
                         _moveDepth[column] = 1;
-                        targetRow = ctm.row - _moveDepth[column];
+                        targetRow = cellToMove.row - _moveDepth[column];
                         targetCell = GetCell(targetRow, column);
                     }
-
-
-                    ctm.cellDat.transform.DOComplete();
-                    ctm.cellDat.transform.DOMove(targetCell.transform.position, 0.1f);
-                    ctm.cellDat.SquashAndStretch();
                     
-                    targetCell.cellValue = ctm.cellValue;
-                    ctm.cellValue = 0;
-                    targetCell.cellDat = ctm.cellDat;
-                    ctm.cellDat.transform.SetParent(targetCell.transform);
-                    ctm.cellDat = null;
-                    _cellsToRemove.Add(targetCell);
+                    MoveCells(cellToMove, targetCell);
                 }
             }
+        }
+
+        private void MoveCells(GridCell cellToMove, GridCell targetCell)
+        {
+            cellToMove.cellDat.transform.DOComplete();
+            cellToMove.cellDat.transform.DOMove(targetCell.transform.position, 0.1f);
+            cellToMove.cellDat.SquashAndStretch();
+                    
+            targetCell.cellValue = cellToMove.cellValue;
+            cellToMove.cellValue = 0;
+            targetCell.cellDat = cellToMove.cellDat;
+            cellToMove.cellDat.transform.SetParent(targetCell.transform);
+            cellToMove.cellDat = null;
+            _cellsToRemove.Add(targetCell);
         }
 
         private void ProcessRemoveList()
@@ -224,5 +229,10 @@
                 grid[i].cellValue = data.cellValues[i];
                 grid[i].SetUpDat();
             }
+        }
+
+        private void OnMoveComplete()
+        {
+            MoveComplete?.Invoke();
         }
     }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -25,6 +26,19 @@ public class GridCell : MonoBehaviour
 
     public Dat cellDat;
 
+    void Subscribe()
+    {
+      GridManager.MoveComplete += CleanUp;   
+    }
+    void Unsubscribe()
+    {
+        GridManager.MoveComplete += CleanUp;   
+    }
+    private void OnDestroy()
+    {
+        Unsubscribe();
+    }
+
     public void SetUpDat()
     {
         if(cellValue == 0) return;
@@ -33,9 +47,8 @@ public class GridCell : MonoBehaviour
         if(cellDat != null) Destroy(cellDat.gameObject);
         cellDat = Instantiate(GridManager.Instance.datPrefab, cellTransform.position, cellTransform.rotation, cellTransform);
         
-        //TODO: get the dat value from the grid manager
-        //TODO: get the dat color from the grid manager dictionary
         cellDat.SetupDat(cellValue, LineManager.Instance.GetColorFromDictionary(cellValue));
+        Subscribe();
     }
     
     public void SetValue(int value)
@@ -51,9 +64,10 @@ public class GridCell : MonoBehaviour
         
         LineManager.Instance.currentLineMasterValue = cellValue;
         LineManager.Instance.AddToPath(this);
-        if (cellDat == null) return;
-        cellDat.ScaleUp();
+        ScaleUp();
     }
+
+
 
     private void OnMouseEnter()
     {
@@ -69,12 +83,24 @@ public class GridCell : MonoBehaviour
             if (!CheckCellSecondFromLast(this)) return;
             
             LineManager.Instance.RemoveFromPath(lastCell);
-            lastCell.cellDat.ResetScale();
+            lastCell.ResetScale();
             
             return;
         }
         LineManager.Instance.AddToPath(this);
-        cellDat?.ScaleUp();
+        ScaleUp();
+    }
+    
+    public void ScaleUp()
+    {
+        if (cellDat == null) return;
+        cellDat.ScaleUp();
+    }
+
+    public void ResetScale()
+    {
+        if (cellDat == null) return;
+       cellDat.ResetScale();
     }
 
     bool CheckCellSecondFromLast(GridCell cell)
@@ -85,5 +111,24 @@ public class GridCell : MonoBehaviour
     bool CheckCellIsNeighbour(GridCell cell)
     {
         return neighbors.Contains(cell);
+    }
+
+    public void CleanUp()
+    {
+        var childDats = GetComponentsInChildren<Dat>();
+        if (childDats.Length <= 1) return;
+        foreach (var dat in childDats)
+        {
+            if (dat == cellDat) continue;
+            Trash.Instance.TrashObject(dat.gameObject);
+        }
+    }
+
+    public void MoveCellDatAndTrash(Vector3 transformPosition, float f)
+    {
+        cellDat.transform.DOMove(transformPosition, f).OnComplete(() =>
+        {
+            Trash.Instance.TrashObject(cellDat.gameObject);
+        });
     }
 }

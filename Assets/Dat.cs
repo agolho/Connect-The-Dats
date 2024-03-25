@@ -11,6 +11,7 @@ public class Dat : MonoBehaviour
     
     [Header("Components")]
     [SerializeField] private Image datImage;
+    [SerializeField] private Image thousandsImage;
     [SerializeField] private TextMeshProUGUI datValueText;
     
     private bool isZoomed;
@@ -28,11 +29,13 @@ public class Dat : MonoBehaviour
             var thousands = value / 1024; 
             datValueText.text = thousands+ "K";
             datImage.color = datColor;
+            thousandsImage.gameObject.SetActive(true);
         }
         else
         {
             datValueText.text = value.ToString();
             datImage.color = datColor;
+            thousandsImage.gameObject.SetActive(false);
         }
     }
     
@@ -54,7 +57,7 @@ public class Dat : MonoBehaviour
     {
         ResetScale();
         datImage.rectTransform.DOComplete();
-        datImage.rectTransform.DOScale(Vector3.one * 1.2f, .15f).OnComplete(() =>
+        datImage.rectTransform.DOScale(Vector3.one * 1.3f, .15f).OnComplete(() =>
         {
             datImage.rectTransform.DOScale(Vector3.one, .1f);
         });

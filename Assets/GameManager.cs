@@ -8,6 +8,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Settings")] 
+    public int powersOfTwoCount = 30;
+    
     private void Awake()
     {
         Instance = this;
@@ -18,6 +21,7 @@ public class GameManager : MonoBehaviour
     {
         LoadGame();
         UIManager.Instance.FadeIn();
+        GridManager.Instance.SetupBoard();
     }
 
     
