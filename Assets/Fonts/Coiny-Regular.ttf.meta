@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 1ab4dca00a8c14f04b1a83c0d0f4af7a
+guid: 34ac4846b400a462fb2da6dd1fa25123
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -9,7 +9,7 @@ TrueTypeFontImporter:
   characterPadding: 1
   includeFontData: 1
   fontNames:
-  - Yotin-Bold
+  - Coiny
   fallbackFontReferences: []
   customCharacters: 
   fontRenderingMode: 0

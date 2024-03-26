@@ -1,46 +1,55 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Components;
+using DG.Tweening;
+using Tools;
+using UnityEngine;
 
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Linq;
-    using DG.Tweening;
-    using UnityEngine;
-
-    public class GridManager: MonoBehaviour
+namespace Managers
+{
+    public class GridManager: MonoSingleton<GridManager>
     {
-        public static GridManager Instance;
-
-        public bool IsInteractable = true;
-        
         [Header("Grid Prefabs")]
         [SerializeField]
         public Dat datPrefab;
-        
-        [Space(10)]
         
         [Header("Grid Properties")]
         public GridCell[] grid;
         public int numRows;
         public int numCols;
-        
+
+
+        private readonly float[] _probabilities = {0.1f, 0.224f, 0.3f, 0.175f, 0.125f, 0.05f, 0.025f, 0.001f};
         
         [SerializeField] private List<GridCell> emptyCells = new List<GridCell>();
         private readonly List<GridCell> _cellsToRemove = new List<GridCell>();
         private List<GridCell> _cellsToMove = new List<GridCell>();
-                
-        int[] _emptyCellMinRows = {5,5,5,5,5};
-        int[] _emptyCellMaxRows = {0,0,0,0,0};
-        int[] _moveDepth = {0,0,0,0,0};
-
-        readonly float[] _probabilities = {0.1f, 0.224f, 0.3f, 0.175f, 0.125f, 0.05f, 0.025f, 0.001f};
-
+        
+        
+        private readonly int[] _emptyCellMinRows = {5,5,5,5,5};
+        private readonly int[] _emptyCellMaxRows = {0,0,0,0,0};
+        private readonly int[] _moveDepth = {0,0,0,0,0};
         
         public static event Action MoveComplete;
         
-        private void Awake()
+        #region Save and Load
+        public int[] GetGridData()
         {
-            Instance = this;
+            return grid.Select(cell => cell.GetValue()).ToArray();
         }
+
+        public void LoadGrid(GridData data)
+        {
+            for (var i = 0; i < data.cellValues.Length; i++)
+            {
+                grid[i].SetValue(data.cellValues[i]);
+                grid[i].SetUpDat();
+            }
+        }
+
+        #endregion
+        #region Initial Setup
 
         public void SetupBoard()
         {
@@ -70,35 +79,19 @@
             }
         }
 
-
-        private GridCell GetCell(int row, int col)
-        {
-            return grid.FirstOrDefault(c => c.row == row && c.col == col);
-        }
-
+        #endregion
+        #region Cell Generation
 
         public void GenerateRandomNewCell()
         {
 
             foreach (var cell in grid)
             {
-                if (cell.cellValue != 0) continue;
+                if (cell.GetValue() != 0) continue;
 
-                float randomNum = UnityEngine.Random.value;
-                float cumulativeProbability = 0f;
-                int selectedNumber = 0;
+                var selectedNumber = SelectANumber();
 
-                for (int i = 0; i < _probabilities.Length; i++)
-                {
-                    cumulativeProbability += _probabilities[i];
-                    if (randomNum <= cumulativeProbability)
-                    {
-                        selectedNumber = (int)Mathf.Pow(2, i + 1);
-                        break;
-                    }
-                }
-
-                cell.cellValue = selectedNumber;
+                cell.SetValue(selectedNumber);
                 cell.SetUpDat();
                 cell.cellDat.PopIn();
                 emptyCells.Remove(cell);
@@ -107,35 +100,42 @@
             GameManager.Instance.SaveGame();
         }
 
-        
-        public void AddToEmptyCells(GridCell cell)
+        private int SelectANumber()
         {
-            emptyCells.Add(cell);
-            
-            CacheMoveInformation(cell);
+            var randomNum = UnityEngine.Random.value;
+            var cumulativeProbability = 0f;
+            var selectedNumber = 0;
+
+            for (var i = 0; i < _probabilities.Length; i++)
+            {
+                cumulativeProbability += _probabilities[i];
+                if (!(randomNum <= cumulativeProbability)) continue;
+                selectedNumber = (int)Mathf.Pow(2, i + 1);
+                break;
+            }
+
+            return selectedNumber;
         }
 
+        #endregion
+        #region Cell Movements
+        
         private void CacheMoveInformation(GridCell cell)
         {
             if(cell.row < _emptyCellMinRows[cell.col]) _emptyCellMinRows[cell.col] = cell.row;
             if(cell.row + 1 > _emptyCellMaxRows[cell.col]) _emptyCellMaxRows[cell.col] = cell.row +1;
             _moveDepth[cell.col] = _emptyCellMaxRows[cell.col] - _emptyCellMinRows[cell.col];
-            
         }
-
         public void ShiftCellsDown()
         {
             _cellsToMove = new List<GridCell>();
             
             CacheCellsToMove();
-            
             ProcessCellsToMove();
-            
             ProcessRemoveList();
-            
             ResetValuesAndLists();
             
-            Invoke(nameof(GenerateRandomNewCell), 0.25f);
+            Invoke(nameof(GenerateRandomNewCell), 0.1f);
         }
         
         private void CacheCellsToMove()
@@ -144,7 +144,7 @@
             {
                 for (var row = emptyCell.row + 1; row < numRows; row++)
                 {
-                    if (GetCell(row, emptyCell.col).cellValue == 0) continue;
+                    if (GetCell(row, emptyCell.col).GetValue() == 0) continue;
                     _cellsToMove.Add(GetCell(row, emptyCell.col));
                 }
             }
@@ -157,24 +157,32 @@
                 for (var column = 0; column < numCols; column++)
                 {
                     if(cellToMove.col != column) continue;
-                    if (cellToMove.cellValue == 0) continue;
+                    
+                    if (cellToMove.GetValue() == 0) continue;
                     if (cellToMove.cellDat == null) continue;
 
                     var targetRow = cellToMove.row - _moveDepth[column];
                     if (targetRow < 0) _moveDepth[column] = 1;
                     var targetCell = GetCell(targetRow, column);
+                    
                     if (targetCell == null)  continue;
                     
-                    if (targetCell.cellValue != 0)
-                    {
-                        _moveDepth[column] = 1;
-                        targetRow = cellToMove.row - _moveDepth[column];
-                        targetCell = GetCell(targetRow, column);
-                    }
+                    if (targetCell.GetValue() != 0) targetCell = EdgeCaseSolution(column, cellToMove);
                     
                     MoveCells(cellToMove, targetCell);
                 }
             }
+        }
+
+        private GridCell EdgeCaseSolution(int column, GridCell cellToMove)
+        {
+            // Fast edge case solution for when there are two empty cells in the same column with one non-empty cell in between
+            // Not a pretty solution given enough time I would refactor this
+            
+            _moveDepth[column] = 1;
+            var targetRow = cellToMove.row - _moveDepth[column];
+            var targetCell = GetCell(targetRow, column);
+            return targetCell;
         }
 
         private void MoveCells(GridCell cellToMove, GridCell targetCell)
@@ -183,8 +191,8 @@
             cellToMove.cellDat.transform.DOMove(targetCell.transform.position, 0.1f);
             cellToMove.cellDat.SquashAndStretch();
                     
-            targetCell.cellValue = cellToMove.cellValue;
-            cellToMove.cellValue = 0;
+            targetCell.SetValue(cellToMove.GetValue());
+            cellToMove.SetValue(0);
             targetCell.cellDat = cellToMove.cellDat;
             cellToMove.cellDat.transform.SetParent(targetCell.transform);
             cellToMove.cellDat = null;
@@ -217,22 +225,26 @@
             }
         }
 
-        public int[] GetGridData()
+        #endregion
+        #region Functions
+
+        private GridCell GetCell(int row, int col)
         {
-            return grid.Select(cell => cell.cellValue).ToArray();
+            return grid.FirstOrDefault(c => c.row == row && c.col == col);
         }
 
-        public void LoadGrid(GridData data)
+        public void AddToEmptyCells(GridCell cell)
         {
-            for (var i = 0; i < data.cellValues.Length; i++)
-            {
-                grid[i].cellValue = data.cellValues[i];
-                grid[i].SetUpDat();
-            }
+            emptyCells.Add(cell);
+            
+            CacheMoveInformation(cell);
         }
 
+        #endregion
+        
         private void OnMoveComplete()
         {
             MoveComplete?.Invoke();
         }
     }
+}

@@ -253,9 +253,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 1
   col: 3
   neighbors:
@@ -429,7 +426,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 12.5}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &154482713
@@ -454,8 +451,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: NO
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
-  m_sharedMaterial: {fileID: 8054282631166387226, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
+  m_sharedMaterial: {fileID: -2860023860404595885, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -558,7 +555,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f71ff8e8b5334ec9b5556f55968ba5ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsInteractable: 1
   datPrefab: {fileID: 1051055362602359481, guid: 8a6feaef8188146f082d7442968bee11, type: 3}
   grid:
   - {fileID: 338135303}
@@ -658,9 +654,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 16
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 3
   col: 1
   neighbors:
@@ -792,9 +785,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 0
   col: 0
   neighbors:
@@ -1064,9 +1054,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 4
   col: 0
   neighbors:
@@ -1198,9 +1185,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 2
   col: 2
   neighbors:
@@ -1332,9 +1316,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 3
   col: 4
   neighbors:
@@ -1466,9 +1447,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 3
   col: 0
   neighbors:
@@ -1668,9 +1646,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 4
   col: 4
   neighbors:
@@ -2004,9 +1979,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 3
   col: 2
   neighbors:
@@ -2119,7 +2091,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: 0}
+  m_AnchoredPosition: {x: -0.000015258789, y: 12.500004}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &756944629
@@ -2144,8 +2116,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: YES
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
-  m_sharedMaterial: {fileID: 8054282631166387226, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
+  m_sharedMaterial: {fileID: -2860023860404595885, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2273,9 +2245,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 0
   col: 1
   neighbors:
@@ -2407,9 +2376,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 4
   col: 3
   neighbors:
@@ -2743,9 +2709,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 4
   col: 1
   neighbors:
@@ -2877,9 +2840,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 0
   col: 3
   neighbors:
@@ -3107,9 +3067,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 1
   col: 1
   neighbors:
@@ -3290,9 +3247,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 4
   col: 2
   neighbors:
@@ -3424,9 +3378,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 1
   col: 4
   neighbors:
@@ -3679,9 +3630,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 3
   col: 3
   neighbors:
@@ -3813,9 +3761,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 16
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 2
   col: 4
   neighbors:
@@ -4101,9 +4046,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 2
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 2
   col: 0
   neighbors:
@@ -4216,7 +4158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 47}
+  m_AnchoredPosition: {x: 0, y: 63.4}
   m_SizeDelta: {x: 0, y: 87.4801}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1412549065
@@ -4241,8 +4183,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Are you sure?
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
-  m_sharedMaterial: {fileID: 8054282631166387226, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
+  m_sharedMaterial: {fileID: -2860023860404595885, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4266,7 +4208,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.4
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4370,9 +4312,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 2
   col: 1
   neighbors:
@@ -4504,9 +4443,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 0
   col: 4
   neighbors:
@@ -4901,8 +4837,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Reset Progress
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
-  m_sharedMaterial: {fileID: 8054282631166387226, guid: f039a8b42d3d940b881ce981544f0ee0, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
+  m_sharedMaterial: {fileID: -2860023860404595885, guid: a1e395ec12954460aadf420b66a3e19f, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4926,7 +4862,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 27.65
+  m_fontSize: 27.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5030,9 +4966,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 0
   col: 2
   neighbors:
@@ -5164,9 +5097,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 1
   col: 2
   neighbors:
@@ -5396,11 +5326,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   path: []
+  currentLineMasterValue: 0
   linePrefab: {fileID: -5586087014661928486, guid: 48a137a594c1740d4a5f614aa1c82e34, type: 3}
   lineParent: {fileID: 731192722}
-  currentLineMasterValue: 0
-  lineIndicatorImage: {fileID: 2634733449834176914}
-  lineIndicatorText: {fileID: 41445189613864250}
+  lineIndicator: {fileID: 6322550808946072675}
   valueColors:
   - {r: 0.909804, g: 0.4039216, b: 0.56078434, a: 1}
   - {r: 1, g: 0.34509805, b: 0.22745098, a: 1}
@@ -5427,6 +5356,82 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1981457264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1981457265}
+  - component: {fileID: 1981457267}
+  - component: {fileID: 1981457266}
+  m_Layer: 5
+  m_Name: ThousandsIndicator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1981457265
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981457264}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6322550808946072674}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1981457266
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981457264}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: a446836cdb2db40188ef7c25b63f9251, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1981457267
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1981457264}
+  m_CullTransparentMesh: 1
 --- !u!1 &2015469180
 GameObject:
   m_ObjectHideFlags: 0
@@ -5558,9 +5563,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 1
   col: 0
   neighbors:
@@ -5692,9 +5694,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 2
   isValid: 0
-  isStart: 0
-  isEnd: 0
-  isPath: 0
   row: 2
   col: 3
   neighbors:
@@ -5873,7 +5872,7 @@ GameObject:
   - component: {fileID: 6803157267038649107}
   - component: {fileID: 41445189613864250}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ValueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5890,6 +5889,7 @@ GameObject:
   - component: {fileID: 6322550808946072674}
   - component: {fileID: 2657094418406992816}
   - component: {fileID: 2634733449834176914}
+  - component: {fileID: 6322550808946072675}
   m_Layer: 5
   m_Name: LineTotalIndicator
   m_TagString: Untagged
@@ -5968,6 +5968,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3690797707768115075}
+  - {fileID: 1981457265}
   m_Father: {fileID: 2015469181}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5976,6 +5977,21 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 75, y: 75}
   m_Pivot: {x: 0.5, y: 0}
+--- !u!114 &6322550808946072675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1976645660599757496}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd3f3584feeca4cdb89401f97162a56a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  indicatorImage: {fileID: 2634733449834176914}
+  thousandsImage: {fileID: 1981457266}
+  valueText: {fileID: 41445189613864250}
 --- !u!222 &6803157267038649107
 CanvasRenderer:
   m_ObjectHideFlags: 0
