@@ -18,9 +18,12 @@ namespace Managers
         public GridCell[] grid;
         public int numRows;
         public int numCols;
-
-
-        private readonly float[] _probabilities = {0.1f, 0.224f, 0.3f, 0.175f, 0.125f, 0.05f, 0.025f, 0.001f};
+        
+        [Header("Settings")]
+        [SerializeField] private float cellGenerationDelay = 0.1f;
+        [SerializeField] private float cellMoveTime = 0.1f;
+        
+        [SerializeField] private float[] randomGenerationProbabilities = {0.1f, 0.224f, 0.3f, 0.175f, 0.125f, 0.05f, 0.025f, 0.001f};
         
         [SerializeField] private List<GridCell> emptyCells = new List<GridCell>();
         private readonly List<GridCell> _cellsToRemove = new List<GridCell>();
@@ -106,9 +109,9 @@ namespace Managers
             var cumulativeProbability = 0f;
             var selectedNumber = 0;
 
-            for (var i = 0; i < _probabilities.Length; i++)
+            for (var i = 0; i < randomGenerationProbabilities.Length; i++)
             {
-                cumulativeProbability += _probabilities[i];
+                cumulativeProbability += randomGenerationProbabilities[i];
                 if (!(randomNum <= cumulativeProbability)) continue;
                 selectedNumber = (int)Mathf.Pow(2, i + 1);
                 break;
@@ -135,7 +138,7 @@ namespace Managers
             ProcessRemoveList();
             ResetValuesAndLists();
             
-            Invoke(nameof(GenerateRandomNewCell), 0.1f);
+            Invoke(nameof(GenerateRandomNewCell), cellGenerationDelay);
         }
         
         private void CacheCellsToMove()
@@ -167,17 +170,17 @@ namespace Managers
                     
                     if (targetCell == null)  continue;
                     
-                    if (targetCell.GetValue() != 0) targetCell = EdgeCaseSolution(column, cellToMove);
+                    if (targetCell.GetValue() != 0) targetCell = GetAnotherEmptyTargetCell(column, cellToMove);
                     
                     MoveCells(cellToMove, targetCell);
                 }
             }
         }
 
-        private GridCell EdgeCaseSolution(int column, GridCell cellToMove)
+        private GridCell GetAnotherEmptyTargetCell(int column, GridCell cellToMove)
         {
             // Fast edge case solution for when there are two empty cells in the same column with one non-empty cell in between
-            // Not a pretty solution given enough time I would refactor this
+            // Not a pretty solution, given enough time I would refactor this
             
             _moveDepth[column] = 1;
             var targetRow = cellToMove.row - _moveDepth[column];
@@ -188,7 +191,7 @@ namespace Managers
         private void MoveCells(GridCell cellToMove, GridCell targetCell)
         {
             cellToMove.cellDat.transform.DOComplete();
-            cellToMove.cellDat.transform.DOMove(targetCell.transform.position, 0.1f);
+            cellToMove.cellDat.transform.DOMove(targetCell.transform.position, cellMoveTime);
             cellToMove.cellDat.SquashAndStretch();
                     
             targetCell.SetValue(cellToMove.GetValue());
@@ -239,6 +242,14 @@ namespace Managers
             
             CacheMoveInformation(cell);
         }
+        
+        public void Reset()
+        {
+            foreach (var cell in grid)
+            {
+                cell.Unsubscribe();
+            }
+        }
 
         #endregion
         
@@ -246,5 +257,7 @@ namespace Managers
         {
             MoveComplete?.Invoke();
         }
+
+
     }
 }

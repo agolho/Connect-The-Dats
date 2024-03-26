@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using Components;
-using TMPro;
 using Tools;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace Managers

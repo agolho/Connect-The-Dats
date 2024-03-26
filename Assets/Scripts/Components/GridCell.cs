@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using DG.Tweening;
 using Managers;
@@ -23,6 +24,12 @@ namespace Components
 
 
         #region Setup
+
+        private void Start()
+        {
+            Subscribe();
+        }
+
         public void SetUpDat()
         {
             if(cellValue == 0) return;
@@ -32,7 +39,6 @@ namespace Components
             cellDat = Instantiate(GridManager.Instance.datPrefab, cellTransform.position, cellTransform.rotation, cellTransform);
         
             cellDat.SetupDat(cellValue, LineManager.Instance.GetColorFromDictionary(cellValue));
-            Subscribe();
         }
         public void SetupDat(int value, Color color)
         {
@@ -160,9 +166,9 @@ namespace Components
         {
             GridManager.MoveComplete += CleanUp;   
         }
-        void Unsubscribe()
+        public void Unsubscribe()
         {
-            GridManager.MoveComplete += CleanUp;   
+            GridManager.MoveComplete -= CleanUp;   
         }
         private void OnDestroy()
         {

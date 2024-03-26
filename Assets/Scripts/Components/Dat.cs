@@ -8,7 +8,6 @@ namespace Components
 {
     public class Dat : MonoBehaviour
     {
-    
         [Header("Components")]
         [SerializeField] private Image datImage;
         [SerializeField] private Image thousandsImage;

@@ -51,6 +51,7 @@ namespace Managers
         public void ResetAndReload()
         {
             PlayerPrefs.DeleteKey("GridData");
+            GridManager.Instance.Reset();
             SceneManager.LoadScene(0);
         }
     }
