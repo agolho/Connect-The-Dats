@@ -90,6 +90,8 @@ namespace Managers
     
         IEnumerator MergeCellRoutine(int lineValue, GridCell cellLastInPath)
         {
+            UIManager.Instance.ShuffleButtonInteractable(false);
+            
             yield return new WaitForSeconds(0.15f);
             SetupMergeTargetCell(lineValue, cellLastInPath);
             
@@ -97,6 +99,9 @@ namespace Managers
             
             yield return new WaitForSeconds(0.1f);
             GridManager.Instance.GenerateRandomNewCell();
+
+            yield return new WaitForSeconds(0.1f);
+            UIManager.Instance.ShuffleButtonInteractable(true);
         }
 
         private void SetupMergeTargetCell(int lineValue, GridCell mergeTargetCell)

@@ -70,6 +70,11 @@ namespace Components
             transform.localScale = Vector3.zero;
             transform.DOScale(Vector3.one, .2f).SetEase(Ease.OutBack);
         }
+        
+        public void PopOut()
+        {
+            transform.DOScale(Vector3.zero, .2f).SetEase(Ease.InBack);
+        }
     
         public void SquashAndStretch()
         {

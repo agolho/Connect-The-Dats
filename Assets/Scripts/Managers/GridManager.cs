@@ -5,6 +5,7 @@ using Components;
 using DG.Tweening;
 using Tools;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Managers
 {
@@ -18,6 +19,7 @@ namespace Managers
         public GridCell[] grid;
         public int numRows;
         public int numCols;
+        public int totalLegalMoves = 0;
         
         [Header("Settings")]
         public float cellGenerationDelay = 0.1f;
@@ -38,7 +40,7 @@ namespace Managers
             for (var i = 0; i < data.cellValues.Length; i++)
             {
                 grid[i].SetValue(data.cellValues[i]);
-                grid[i].SetUpDat();
+                grid[i].SetupDat();
             }
         }
 
@@ -50,8 +52,9 @@ namespace Managers
             CalculateNeighbours();
             foreach (var cell in grid)
             {
-                cell.SetUpDat();
+                cell.SetupDat();
             }
+            CalculateTotalLegalMoves();
         }
         
         void CalculateNeighbours()
@@ -85,10 +88,11 @@ namespace Managers
                 var selectedNumber = SelectANumber();
 
                 cell.SetValue(selectedNumber);
-                cell.SetUpDat();
+                cell.SetupDat();
                 cell.cellDat.PopIn();
             }
             GameManager.Instance.SaveGame();
+            CalculateTotalLegalMoves();
         }
 
         private int SelectANumber()
@@ -128,7 +132,50 @@ namespace Managers
                 cell.Unsubscribe();
             }
         }
-
+        
+        void CalculateTotalLegalMoves()
+        {
+            totalLegalMoves = 0;
+            foreach (var cell in grid)
+            {
+                totalLegalMoves +=cell.CheckLegalMoves();
+                if(totalLegalMoves > 0) return;
+            }
+            if(totalLegalMoves == 0)
+            {
+              UIManager.Instance.EmphasiseShuffleButton();
+            }
+        }
         #endregion
+
+        public void ShuffleBoard()
+        {
+            List<int> currentValues = new List<int>();
+            foreach (var cell in grid)
+            {
+                currentValues.Add(cell.GetValue());
+                cell.PopOut();
+            }
+
+            for (var i = 0; i < currentValues.Count; i++)
+            {
+                var randomIndex = Random.Range(0, currentValues.Count);
+                (currentValues[i], currentValues[randomIndex]) = (currentValues[randomIndex], currentValues[i]);
+            }
+
+            // Now update the grid cells with the shuffled values
+            for (int row = 0; row < numRows; row++)
+            {
+                for (int col = 0; col < numCols; col++)
+                {
+                    int index = row * numRows + col;
+                    var cell = GetCell(row, col);
+                    cell.SetValue(currentValues[index]);
+                    cell.SetupDat(cell.GetValue(), LineManager.Instance.GetColorFromDictionary(cell.GetValue()));
+                    GetCell(row,col).cellDat.PopIn();
+                }
+            }
+        }
+
     }
 }

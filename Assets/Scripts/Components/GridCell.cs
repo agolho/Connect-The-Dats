@@ -35,7 +35,7 @@ namespace Components
             Subscribe();
         }
 
-        public void SetUpDat()
+        public void SetupDat()
         {
             if(cellValue == 0) return;
             isValid = true;
@@ -226,6 +226,13 @@ namespace Components
             if (cellDat == null) return;
             cellDat.PopIn();
         }
+        
+        
+        public void PopOut()
+        {
+            if (cellDat == null) return;
+            cellDat.PopOut(); 
+        }
     
         public void SquashAndStretch()
         {
@@ -249,5 +256,23 @@ namespace Components
         }
 
         #endregion
+
+        public int legalMoveCount = 0;
+        public int CheckLegalMoves()
+        {
+            legalMoveCount = 0;
+            if (cellValue == 0) return legalMoveCount;
+            foreach (var neighbour in neighbors)
+            {
+                if (neighbour == null) continue;
+                if (neighbour.GetValue() == cellValue)
+                {
+                    legalMoveCount++;
+                }
+                if(legalMoveCount > 0) return legalMoveCount;
+            }
+            return legalMoveCount;
+        }
+
     }
 }
