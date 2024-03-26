@@ -11,7 +11,6 @@ namespace Managers
         public Button resetButton;
         public Button resetYesButton, resetNoButton, promptCloseButton;
         [Header("Screens")]
-        [SerializeField] private Image fadeImage;
         [SerializeField] private GameObject resetPromptScreen;
     
         private void Start()
@@ -35,11 +34,6 @@ namespace Managers
         void ShowResetPrompt()
         {
             resetPromptScreen.SetActive(true);
-        }
-    
-        public void FadeIn()
-        {
-            fadeImage.DOFade(0, .75f);
         }
     }
 }

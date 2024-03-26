@@ -24,7 +24,6 @@ namespace Managers
         private void Start()
         {
             LoadGame();
-            UIManager.Instance.FadeIn();
             GridManager.Instance.SetupBoard();
         }
 
