@@ -251,8 +251,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3801c10bb85004928b5ab5b675639b1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellValue: 32
+  cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 1
   col: 3
   neighbors:
@@ -584,6 +587,17 @@ MonoBehaviour:
   - {fileID: 555857988}
   numRows: 5
   numCols: 5
+  cellGenerationDelay: 0.1
+  cellMoveTime: 0.1
+  randomGenerationProbabilities:
+  - 0.1
+  - 0.224
+  - 0.3
+  - 0.175
+  - 0.125
+  - 0.05
+  - 0.025
+  - 0.001
   emptyCells: []
 --- !u!4 &259095991
 Transform:
@@ -654,6 +668,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 16
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 3
   col: 1
   neighbors:
@@ -785,6 +802,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 0
   col: 0
   neighbors:
@@ -1054,6 +1074,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 4
   col: 0
   neighbors:
@@ -1185,6 +1208,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 2
   col: 2
   neighbors:
@@ -1316,6 +1342,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 3
   col: 4
   neighbors:
@@ -1447,6 +1476,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 3
   col: 0
   neighbors:
@@ -1646,6 +1678,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 4
   col: 4
   neighbors:
@@ -1979,6 +2014,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 3
   col: 2
   neighbors:
@@ -2245,6 +2283,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 0
   col: 1
   neighbors:
@@ -2376,6 +2417,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 4
   col: 3
   neighbors:
@@ -2709,6 +2753,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 4
   col: 1
   neighbors:
@@ -2840,6 +2887,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 0
   col: 3
   neighbors:
@@ -3067,6 +3117,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 1
   col: 1
   neighbors:
@@ -3247,6 +3300,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 4
   col: 2
   neighbors:
@@ -3378,6 +3434,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 1
   col: 4
   neighbors:
@@ -3630,6 +3689,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 3
   col: 3
   neighbors:
@@ -3761,6 +3823,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 16
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 2
   col: 4
   neighbors:
@@ -4046,6 +4111,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 2
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 2
   col: 0
   neighbors:
@@ -4312,6 +4380,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 2
   col: 1
   neighbors:
@@ -4443,6 +4514,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 8
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 0
   col: 4
   neighbors:
@@ -4966,6 +5040,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 4
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 0
   col: 2
   neighbors:
@@ -5097,6 +5174,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 64
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 1
   col: 2
   neighbors:
@@ -5564,6 +5644,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 32
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 1
   col: 0
   neighbors:
@@ -5695,6 +5778,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellValue: 2
   isValid: 0
+  setToMove: 0
+  isClaimed: 0
+  claimedBy: {fileID: 0}
   row: 2
   col: 3
   neighbors:

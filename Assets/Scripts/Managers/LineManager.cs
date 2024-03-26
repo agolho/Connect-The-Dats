@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Components;
+using DG.Tweening;
 using Tools;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -22,6 +24,8 @@ namespace Managers
         
         
         private readonly Dictionary<int, Color> _lineColors = new Dictionary<int, Color>();
+        
+        public static event Action MergeComplete;
         
         private void Start()
         {
@@ -64,35 +68,42 @@ namespace Managers
         private void MergeLine()
         {
             var lineValue = CalculateLineValue();
-
-            path[^1].transform.SetAsFirstSibling();
+            var cellLastInPath = path[^1];
+            cellLastInPath.transform.SetAsFirstSibling();
             for (var index = 0; index < path.Count; index++)
             {
                 if (index == path.Count - 1) continue;
                 var cell = path[index];
                 cell.ResetScale();
                 cell.SetValue(0);
-                GridManager.Instance.AddToEmptyCells(cell);
-                cell.MoveCellDatAndTrash(path[^1].transform.position, 0.15f);
+                
+                cell.MoveCellDat(cellLastInPath.transform.position, GridManager.Instance.cellMoveTime);
+                Trash.Instance.TrashObject(cell.cellDat.gameObject, GridManager.Instance.cellMoveTime);
+                
+                GridManager.Instance.SetTopNeighbourToMove(cell);
             }
             StartCoroutine(MergeCellRoutine(lineValue, path[^1]));
+            
             ClearPath();
             SoundManager.Instance.PlaySound(Random.Range(0, 2) == 0 ? "pop1" : "pop2");
-            StartCoroutine(CellShiftRoutine());
         }
     
-        IEnumerator MergeCellRoutine(int lineValue, GridCell mergeTargetCell)
+        IEnumerator MergeCellRoutine(int lineValue, GridCell cellLastInPath)
         {
             yield return new WaitForSeconds(0.15f);
+            SetupMergeTargetCell(lineValue, cellLastInPath);
+            
+            OnMergeComplete();
+            
+            yield return new WaitForSeconds(0.1f);
+            GridManager.Instance.GenerateRandomNewCell();
+        }
+
+        private void SetupMergeTargetCell(int lineValue, GridCell mergeTargetCell)
+        {
             mergeTargetCell.SetValue(lineValue);
             mergeTargetCell.SetupDat(lineValue, GetColorFromDictionary(lineValue));
             mergeTargetCell.Emphasise();
-        }
-    
-        private IEnumerator CellShiftRoutine()
-        {
-            yield return new WaitForSeconds(0.25f);
-            GridManager.Instance.ShiftCellsDown();
         }
 
         #endregion
@@ -186,7 +197,10 @@ namespace Managers
         }
         #endregion
 
-    
 
+        private static void OnMergeComplete()
+        {
+            MergeComplete?.Invoke();
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using DG.Tweening;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -72,12 +73,13 @@ namespace Components
     
         public void SquashAndStretch()
         {
+            if (!gameObject.activeInHierarchy) return;
             StartCoroutine(SquashAndStretchRoutine());
         }
         private IEnumerator SquashAndStretchRoutine()
         {
+            
             yield return new WaitForSeconds(0.1f);
-            transform.DOComplete();
             transform.DOLocalMove(Vector3.up * -.2f, .07f)
                 .OnComplete(() =>
                 {
@@ -89,7 +91,6 @@ namespace Components
                     transform.DOScale(Vector3.one, .1f);
                 });
         }
-
         #endregion
     
    
