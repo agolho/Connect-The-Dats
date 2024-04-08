@@ -15,7 +15,8 @@ namespace Managers
 
         [Header("Settings")] 
         public int powersOfTwoCount = 30;
-    
+        public int ActiveThemeIndex = 0;
+
         private void Awake()
         {
             Application.targetFrameRate = 120;
@@ -31,7 +32,11 @@ namespace Managers
         void LoadGame()
         {
             var json = PlayerPrefs.GetString("GridData");
-            if (string.IsNullOrEmpty(json)) return;
+            if (string.IsNullOrEmpty(json))
+            {
+                GridManager.Instance.GenerateGrid();
+                return;
+            }
             var data = JsonUtility.FromJson<GridData>(json);
             GridManager.Instance.LoadGrid(data);
         }

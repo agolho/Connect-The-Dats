@@ -1,3 +1,4 @@
+using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ namespace Components
         [SerializeField] private Image indicatorImage;
         [SerializeField] private Image thousandsImage;
         [SerializeField] private TextMeshProUGUI valueText;
+        [SerializeField] private Image valueImage;
     
         public void HideIndicator()
         {
@@ -21,7 +23,10 @@ namespace Components
         {
             indicatorImage.gameObject.SetActive(true);
             thousandsImage.gameObject.SetActive(false);
-            valueText.gameObject.SetActive(true);
+            valueText.gameObject.SetActive(false);
+            var index = GetValueIndex(value);
+            if(index > LineManager.Instance.lineValues.Count - 1) index = LineManager.Instance.lineValues.Count - 1;
+            valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
             if (value > 999)
             {
                 thousandsImage.gameObject.SetActive(true);
@@ -34,6 +39,9 @@ namespace Components
         
             indicatorImage.color = color;
         }
-    
+        private int GetValueIndex(int value)
+        {
+            return LineManager.Instance.lineValues.IndexOf(value);;
+        }
     }
 }

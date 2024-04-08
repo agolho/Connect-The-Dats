@@ -14,16 +14,21 @@ namespace Managers
         [Header("Grid Prefabs")]
         [SerializeField]
         public Dat datPrefab;
-        
+        public GridCell cellPrefab;
+
         [Header("Grid Properties")]
+        [SerializeField] private Transform gridParent;
         public GridCell[] grid;
         public int numRows;
         public int numCols;
         public int totalLegalMoves = 0;
+        [SerializeField] private float multiplier = 1.6f;
+        [SerializeField] private float offset = 3.3f;
         
         [Header("Settings")]
         public float cellGenerationDelay = 0.1f;
         public float cellMoveTime = 0.1f;
+        public bool loadGame = false;
         
         // Each index represents the probability of generating a number with 2^(index+1)
         // Total probability should be 1
@@ -37,6 +42,8 @@ namespace Managers
 
         public void LoadGrid(GridData data)
         {
+            GenerateGrid();
+            if (!loadGame) return;
             for (var i = 0; i < data.cellValues.Length; i++)
             {
                 grid[i].SetValue(data.cellValues[i]);
@@ -46,7 +53,7 @@ namespace Managers
 
         #endregion
         #region Initial Setup
-
+        
         public void SetupBoard()
         {
             CalculateNeighbours();
@@ -56,6 +63,28 @@ namespace Managers
             }
             CalculateTotalLegalMoves();
         }
+
+        public void GenerateGrid()
+        {
+            var offsetX = (numCols-2) * .8f + 1;
+            var offsetY = (numRows-2) * .8f + 1;
+            grid = new GridCell[numRows * numCols];
+            for (var row = numRows - 1; row >= 0; row--)
+            {
+                for (var col = 0; col < numCols; col++)
+                {
+                    var cell = Instantiate(cellPrefab, gridParent);
+                    cell.row = numRows - 1 - row; // Set cell.row to total_rows - index
+                    cell.col = col;
+                    cell.index = row * numCols + col;
+                    cell.SetValue(LineManager.Instance.lineValues[Random.Range(0, 4)]);
+                    cell.transform.position = new Vector3(col * multiplier - offsetX , -row * multiplier + (offsetY -.5f), 0);
+                    grid[cell.index] = cell;
+                }
+            }
+        }
+
+
         
         void CalculateNeighbours()
         {
@@ -133,7 +162,7 @@ namespace Managers
             }
         }
         
-        void CalculateTotalLegalMoves()
+        public void CalculateTotalLegalMoves()
         {
             totalLegalMoves = 0;
             foreach (var cell in grid)
@@ -143,7 +172,7 @@ namespace Managers
             }
             if(totalLegalMoves == 0)
             {
-              UIManager.Instance.EmphasiseShuffleButton();
+              UIManager.Instance.ShowShuffleButton();
             }
         }
         #endregion

@@ -1,5 +1,6 @@
 using System.Collections;
 using DG.Tweening;
+using Managers;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace Components
         [Header("Components")]
         [SerializeField] private Image datImage;
         [SerializeField] private Image thousandsImage;
+        [SerializeField] private Image valueImage;
         [SerializeField] private TextMeshProUGUI datValueText;
     
         private bool _isZoomed;
@@ -27,16 +29,24 @@ namespace Components
             if (value >= 1024)
             {
                 var thousands = value / 1024; 
-                datValueText.text = thousands+ "K";
+                //datValueText.text = thousands+ "K";
                 datImage.color = datColor;
                 thousandsImage.gameObject.SetActive(true);
             }
             else
             {
-                datValueText.text = value.ToString();
+                //datValueText.text = value.ToString();
                 datImage.color = datColor;
                 thousandsImage.gameObject.SetActive(false);
             }
+            var index = GetValueIndex(value);
+            if(index > LineManager.Instance.lineValues.Count - 1) index = LineManager.Instance.lineValues.Count - 1;
+            valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
+        }
+
+        private int GetValueIndex(int value)
+        {
+            return LineManager.Instance.lineValues.IndexOf(value);;
         }
 
         #region Animations

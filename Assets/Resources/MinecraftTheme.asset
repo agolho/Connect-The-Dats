@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14b5e147204ce4ba68ba8c64f3ca92d4, type: 3}
+  m_Name: MinecraftTheme
+  m_EditorClassIdentifier: 
+  valueSprites:
+  - {fileID: 21300000, guid: 43bede3fca569493ea4f14704ff14e9b, type: 3}
+  - {fileID: 21300000, guid: ca49323e5818748e99fef0fba140328d, type: 3}
+  - {fileID: 21300000, guid: 13d85304c932a494ba8dfe1f5e35dd11, type: 3}
+  - {fileID: 21300000, guid: 1c0d2924e30494ec1a884c8651f69e15, type: 3}
+  - {fileID: 21300000, guid: 9f05809ec4431438ea3234b7d5f7254d, type: 3}
+  - {fileID: 21300000, guid: e057ba35cc8c94a708347d65d549e069, type: 3}
+  - {fileID: 21300000, guid: ad6dfc5c79f424479826d38979dd0ad9, type: 3}
+  - {fileID: 21300000, guid: cc7e2b96293b5489e9214a0b8cbcf619, type: 3}
+  - {fileID: 21300000, guid: 56de005ab48774ea3a949684d792d6fe, type: 3}
+  - {fileID: 21300000, guid: 8a40ca01d2aff4910b230c3e57bfd7f3, type: 3}
+  - {fileID: 21300000, guid: 6a0d66597ed354728882c3d80030e5f9, type: 3}
+  - {fileID: 21300000, guid: 1ddcfc09c69dc40dfbdca265674831f7, type: 3}
+  - {fileID: 21300000, guid: 145a3d1970a08418e826dc74ae369772, type: 3}

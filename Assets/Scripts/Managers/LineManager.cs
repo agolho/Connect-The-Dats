@@ -20,8 +20,8 @@ namespace Managers
         [SerializeField] private LineIndicator lineIndicator;
         [Header("Values")]
         [SerializeField] private Color[] valueColors;
-        [SerializeField] private List<int> lineValues = new List<int>();
-        
+        public List<int> lineValues = new List<int>();
+        [SerializeField] private float opacity = 1;
         
         private readonly Dictionary<int, Color> _lineColors = new Dictionary<int, Color>();
         
@@ -61,7 +61,9 @@ namespace Managers
     
         public Color GetColorFromDictionary(int value)
         {
-            return _lineColors[value];
+            var colorToReturn = _lineColors[value];
+            colorToReturn.a = lineValues.IndexOf(value) * opacity;
+            return colorToReturn;
         }
         #endregion
         #region Merging Dots
@@ -90,8 +92,6 @@ namespace Managers
     
         IEnumerator MergeCellRoutine(int lineValue, GridCell cellLastInPath)
         {
-            UIManager.Instance.ShuffleButtonInteractable(false);
-            
             yield return new WaitForSeconds(0.15f);
             SetupMergeTargetCell(lineValue, cellLastInPath);
             
@@ -101,7 +101,6 @@ namespace Managers
             GridManager.Instance.GenerateRandomNewCell();
 
             yield return new WaitForSeconds(0.1f);
-            UIManager.Instance.ShuffleButtonInteractable(true);
         }
 
         private void SetupMergeTargetCell(int lineValue, GridCell mergeTargetCell)

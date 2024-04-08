@@ -48,14 +48,22 @@ namespace Managers
         private void ShuffleBoard()
         {
             GridManager.Instance.ShuffleBoard();
+            HideShuffleButton();
+            GridManager.Instance.CalculateTotalLegalMoves();
         }
         
-        public void ShuffleButtonInteractable(bool interactable)
+        public void ShowShuffleButton()
         {
-            shuffleButton.interactable = interactable;
+            shuffleButton.gameObject.SetActive(true);
+            EmphasiseShuffleButton();
         }
         
-        public void EmphasiseShuffleButton()
+        public void HideShuffleButton()
+        {
+            shuffleButton.gameObject.SetActive(false);
+        }
+
+        private void EmphasiseShuffleButton()
         {
             shuffleButton.transform.DOComplete();
             shuffleButton.transform.DOPunchScale(Vector3.one * 0.1f, 0.5f, 10, 1);
