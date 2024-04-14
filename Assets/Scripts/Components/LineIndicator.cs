@@ -12,6 +12,8 @@ namespace Components
         [SerializeField] private TextMeshProUGUI valueText;
         [SerializeField] private Image valueImage;
     
+        private bool withTheme;
+
         public void HideIndicator()
         {
             indicatorImage.gameObject.SetActive(false);
@@ -26,7 +28,15 @@ namespace Components
             valueText.gameObject.SetActive(false);
             var index = GetValueIndex(value);
             if(index > LineManager.Instance.lineValues.Count - 1) index = LineManager.Instance.lineValues.Count - 1;
-            valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
+            if(withTheme) {
+                valueImage.gameObject.SetActive(true);
+                valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
+                valueText.gameObject.SetActive(false);
+            }
+            else { 
+                valueText.gameObject.SetActive(true);
+                valueImage.gameObject.SetActive(false);
+            }
             if (value > 999)
             {
                 thousandsImage.gameObject.SetActive(true);

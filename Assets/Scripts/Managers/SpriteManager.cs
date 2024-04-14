@@ -11,6 +11,9 @@ public class SpriteManager : MonoSingleton<SpriteManager>
     
     public Sprite GetActiveThemeSprite(int value)
     {
+        if(value == -1){
+            
+        }
         if(value >= themes[GameManager.Instance.ActiveThemeIndex].valueSprites.Length)
         {
             return themes[GameManager.Instance.ActiveThemeIndex].valueSprites[^1];

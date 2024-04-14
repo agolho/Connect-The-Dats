@@ -62,11 +62,14 @@ namespace Managers
         public Color GetColorFromDictionary(int value)
         {
             var colorToReturn = _lineColors[value];
-            colorToReturn.a = lineValues.IndexOf(value) * opacity;
+            //colorToReturn.a = lineValues.IndexOf(value) * opacity;
             return colorToReturn;
         }
+
         #endregion
         #region Merging Dots
+    // change the name of this method to something more descriptive
+    
         private void MergeLine()
         {
             var lineValue = CalculateLineValue();

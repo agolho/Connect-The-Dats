@@ -16,6 +16,7 @@ namespace Components
         [SerializeField] private Image valueImage;
         [SerializeField] private TextMeshProUGUI datValueText;
     
+        public bool withTheme;
         private bool _isZoomed;
 
         private void Start()
@@ -26,22 +27,31 @@ namespace Components
 
         public void SetupDat(int value, Color datColor)
         {
+            withTheme = GameManager.Instance.ActiveThemeIndex != -1;
             if (value >= 1024)
             {
                 var thousands = value / 1024; 
-                //datValueText.text = thousands+ "K";
+                if(!withTheme) datValueText.text = thousands+ "K";
                 datImage.color = datColor;
                 thousandsImage.gameObject.SetActive(true);
             }
             else
             {
-                //datValueText.text = value.ToString();
+                if(!withTheme) datValueText.text = value.ToString();
                 datImage.color = datColor;
                 thousandsImage.gameObject.SetActive(false);
             }
             var index = GetValueIndex(value);
             if(index > LineManager.Instance.lineValues.Count - 1) index = LineManager.Instance.lineValues.Count - 1;
-            valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
+            if(withTheme) {
+                valueImage.gameObject.SetActive(true);
+                valueImage.sprite = SpriteManager.Instance.GetActiveThemeSprite(index);
+                datValueText.gameObject.SetActive(false);
+                }
+            else { 
+                datValueText.gameObject.SetActive(true);
+                valueImage.gameObject.SetActive(false);
+                }
         }
 
         private int GetValueIndex(int value)
